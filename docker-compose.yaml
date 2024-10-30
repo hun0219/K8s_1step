@@ -2,17 +2,23 @@ name: samdul
 services:
   blog:
     build: ./docker/httpd
-    ports:
+    expose:
       - 80
     deploy:
+      # 특정 개수의 서비스 인스턴스(복제본)를 정의하여 실행합니다. replicas 옵션을 사용해 인스턴스 개수를 설정
       mode: replicated
+      #같은 서비스의 인스턴스 동시 실행 수갯
       replicas: 1
+    environment:
+      - VIRTUAL_HOST=localhost
+      - VIRTUAL_PORT=80
 
   load_balancer:
-    build: ./docker/nginx
-    container_name: blog-lb
+    image: nginxproxy/nginx-proxy
     ports:
       - 8949:80
     # depends_on은 서비스의 시작 순서 보장, 서비스를 시작하기 전에 blog_1, blog_2, blog_3 서비스가 반드시 실행되어야 함을 지정
     depends_on:
       - blog
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
