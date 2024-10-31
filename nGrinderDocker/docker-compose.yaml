@@ -1,0 +1,19 @@
+name: ngrinder
+services:
+  controller:
+    image: ngrinder/controller:latest
+    ports:
+      - "9000:80"
+      - "16001:16001"
+      - "12000-12009:12000-12009"
+    volumes:
+      - ./data:/opt/ngrinder-controller/data
+  agent:
+    image: ngrinder/agent
+    depends_on:
+      - controller
+    environment:
+      - CONTROLLER_HOST=controller
+    volumes:
+      - ./agent_data:/opt/ngrinder-agent/data
+
