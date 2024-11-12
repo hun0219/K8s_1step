@@ -18,7 +18,7 @@ services:
         #          memory: 6M
         #
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=localhost, 172.17.0.1
       - VIRTUAL_PORT=80
 
   load_balancer:
